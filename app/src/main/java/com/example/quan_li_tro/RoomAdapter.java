@@ -38,8 +38,11 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     @Override
     public void onBindViewHolder(@NonNull RoomViewHolder holder, int position) {
         Room room = roomList.get(position);
+        holder.tvRoomId.setText("Mã: " + room.getId());
         holder.tvRoomName.setText(room.getName());
         holder.tvRoomPrice.setText("Giá: " + room.getPrice() + " VNĐ");
+        holder.tvTenantName.setText("Người thuê: " + (room.getTenantName() != null ? room.getTenantName() : "N/A"));
+        holder.tvPhoneNumber.setText("SĐT: " + (room.getPhoneNumber() != null ? room.getPhoneNumber() : "N/A"));
         
         if (room.isOccupied()) {
             holder.tvRoomStatus.setText("Đã thuê");
@@ -62,12 +65,15 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     }
 
     public static class RoomViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoomName, tvRoomPrice, tvRoomStatus;
+        TextView tvRoomId, tvRoomName, tvRoomPrice, tvRoomStatus, tvTenantName, tvPhoneNumber;
         public RoomViewHolder(@NonNull View itemView) {
             super(itemView);
+            tvRoomId = itemView.findViewById(R.id.tvRoomId);
             tvRoomName = itemView.findViewById(R.id.tvRoomName);
             tvRoomPrice = itemView.findViewById(R.id.tvRoomPrice);
             tvRoomStatus = itemView.findViewById(R.id.tvRoomStatus);
+            tvTenantName = itemView.findViewById(R.id.tvTenantName);
+            tvPhoneNumber = itemView.findViewById(R.id.tvPhoneNumber);
         }
     }
 }

@@ -14,12 +14,20 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/tvRoomId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mã phòng: "
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp" />
+
+        <TextView
             android:id="@+id/tvRoomName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Tên phòng"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:text="Tên phòng" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvRoomPrice"
@@ -27,6 +35,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Giá: 0 VNĐ" />
+
+        <TextView
+            android:id="@+id/tvTenantName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Người thuê: " />
+
+        <TextView
+            android:id="@+id/tvPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="SĐT: " />
 
         <TextView
             android:id="@+id/tvRoomStatus"
