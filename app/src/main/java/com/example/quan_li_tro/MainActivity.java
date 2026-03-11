@@ -51,22 +51,26 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
         EditText etRoomId = view.findViewById(R.id.etRoomId);
         EditText etRoomName = view.findViewById(R.id.etRoomName);
         EditText etRoomPrice = view.findViewById(R.id.etRoomPrice);
+        EditText etTenantName = view.findViewById(R.id.etTenantName);
+        EditText etPhoneNumber = view.findViewById(R.id.etPhoneNumber);
         CheckBox cbIsOccupied = view.findViewById(R.id.cbIsOccupied);
 
         builder.setPositiveButton("Thêm", (dialog, which) -> {
             String id = etRoomId.getText().toString().trim();
             String name = etRoomName.getText().toString().trim();
             String priceStr = etRoomPrice.getText().toString().trim();
+            String tenantName = etTenantName.getText().toString().trim();
+            String phoneNumber = etPhoneNumber.getText().toString().trim();
             boolean isOccupied = cbIsOccupied.isChecked();
 
             if (id.isEmpty() || name.isEmpty() || priceStr.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Vui lòng nhập đủ thông tin cơ bản", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             try {
                 double price = Double.parseDouble(priceStr);
-                Room newRoom = new Room(id, name, price, isOccupied, "", "");
+                Room newRoom = new Room(id, name, price, isOccupied, tenantName, phoneNumber);
                 roomList.add(newRoom);
                 adapter.notifyItemInserted(roomList.size() - 1);
                 rvRooms.scrollToPosition(roomList.size() - 1);
@@ -81,7 +85,18 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
 
     @Override
     public void onItemClick(Room room, int position) {
-        showUpdateRoomDialog(room, position);
+        // Menu tùy chọn: Sửa hoặc Xóa
+        String[] options = {"Sửa", "Xóa"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Chọn thao tác cho " + room.getName());
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                showUpdateRoomDialog(room, position);
+            } else {
+                showDeleteConfirmDialog(room, position);
+            }
+        });
+        builder.show();
     }
 
     @Override
@@ -112,18 +127,24 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
         EditText etRoomId = view.findViewById(R.id.etRoomId);
         EditText etRoomName = view.findViewById(R.id.etRoomName);
         EditText etRoomPrice = view.findViewById(R.id.etRoomPrice);
+        EditText etTenantName = view.findViewById(R.id.etTenantName);
+        EditText etPhoneNumber = view.findViewById(R.id.etPhoneNumber);
         CheckBox cbIsOccupied = view.findViewById(R.id.cbIsOccupied);
 
         // Đổ dữ liệu cũ vào
         etRoomId.setText(room.getId());
-        etRoomId.setEnabled(false); // Không cho sửa ID nếu muốn
+        etRoomId.setEnabled(false);
         etRoomName.setText(room.getName());
         etRoomPrice.setText(String.valueOf(room.getPrice()));
+        etTenantName.setText(room.getTenantName());
+        etPhoneNumber.setText(room.getPhoneNumber());
         cbIsOccupied.setChecked(room.isOccupied());
 
         builder.setPositiveButton("Cập nhật", (dialog, which) -> {
             String name = etRoomName.getText().toString().trim();
             String priceStr = etRoomPrice.getText().toString().trim();
+            String tenantName = etTenantName.getText().toString().trim();
+            String phoneNumber = etPhoneNumber.getText().toString().trim();
             boolean isOccupied = cbIsOccupied.isChecked();
 
             if (name.isEmpty() || priceStr.isEmpty()) {
@@ -133,11 +154,11 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
 
             try {
                 double price = Double.parseDouble(priceStr);
-                
-                // Cập nhật đối tượng
                 room.setName(name);
                 room.setPrice(price);
                 room.setOccupied(isOccupied);
+                room.setTenantName(tenantName);
+                room.setPhoneNumber(phoneNumber);
                 
                 adapter.notifyItemChanged(position);
                 Toast.makeText(this, "Đã cập nhật", Toast.LENGTH_SHORT).show();
@@ -148,5 +169,19 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
 
         builder.setNegativeButton("Hủy", null);
         builder.show();
+    }
+
+    private void showDeleteConfirmDialog(Room room, int position) {
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận xóa")
+                .setMessage("Bạn có chắc chắn muốn xóa phòng " + room.getName() + "?")
+                .setPositiveButton("Xóa", (dialog, which) -> {
+                    roomList.remove(position);
+                    adapter.notifyItemRemoved(position);
+                    adapter.notifyItemRangeChanged(position, roomList.size());
+                    Toast.makeText(this, "Đã xóa phòng", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 }
