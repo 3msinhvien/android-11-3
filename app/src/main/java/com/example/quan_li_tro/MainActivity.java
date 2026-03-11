@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
     private RoomAdapter adapter;
     private RecyclerView rvRooms;
     private ExtendedFloatingActionButton fabAddRoom;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
 
         rvRooms = findViewById(R.id.rvRooms);
         fabAddRoom = findViewById(R.id.fabAddRoom);
+        searchView = findViewById(R.id.searchView);
 
         // Thêm dữ liệu mẫu
         roomList.add(new Room("101", "Phòng 101", 2500000, false, "", ""));
@@ -40,6 +43,20 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
         rvRooms.setAdapter(adapter);
 
         fabAddRoom.setOnClickListener(v -> showAddRoomDialog());
+
+        // Thiết lập chức năng tìm kiếm
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter(newText);
+                return true;
+            }
+        });
     }
 
     private void showAddRoomDialog() {
@@ -68,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
                 double price = Double.parseDouble(priceStr);
                 Room newRoom = new Room(id, name, price, isOccupied, "", "");
                 roomList.add(newRoom);
+                adapter.updateFullList(); // Cập nhật danh sách tìm kiếm
                 adapter.notifyItemInserted(roomList.size() - 1);
                 rvRooms.scrollToPosition(roomList.size() - 1);
             } catch (NumberFormatException e) {
@@ -95,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
         builder.setMessage("Bạn có chắc chắn muốn xóa phòng này không?");
         builder.setPositiveButton("Có", (dialog, which) -> {
             roomList.remove(position);
+            adapter.updateFullList(); // Cập nhật danh sách tìm kiếm
             adapter.notifyItemRemoved(position);
             adapter.notifyItemRangeChanged(position, roomList.size());
             Toast.makeText(this, "Đã xóa phòng", Toast.LENGTH_SHORT).show();
@@ -139,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
                 room.setPrice(price);
                 room.setOccupied(isOccupied);
                 
+                adapter.updateFullList(); // Cập nhật danh sách tìm kiếm
                 adapter.notifyItemChanged(position);
                 Toast.makeText(this, "Đã cập nhật", Toast.LENGTH_SHORT).show();
             } catch (NumberFormatException e) {

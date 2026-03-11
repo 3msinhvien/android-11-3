@@ -9,10 +9,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder> {
     private List<Room> roomList;
+    private List<Room> roomListFull; // Bản sao lưu danh sách gốc
     private Context context;
     private OnItemClickListener listener;
     private OnItemLongClickListener longClickListener;
@@ -36,6 +38,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     public RoomAdapter(Context context, List<Room> roomList) {
         this.context = context;
         this.roomList = roomList;
+        this.roomListFull = new ArrayList<>(roomList);
     }
 
     @NonNull
@@ -73,7 +76,6 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
             return false;
         });
 
-        // Xử lý nút xóa
         holder.btnDelete.setOnClickListener(v -> {
             if (longClickListener != null) {
                 longClickListener.onItemLongClick(room, position);
@@ -84,6 +86,27 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     @Override
     public int getItemCount() {
         return roomList.size();
+    }
+
+    // Phương thức lọc dữ liệu
+    public void filter(String text) {
+        roomList.clear();
+        if (text.isEmpty()) {
+            roomList.addAll(roomListFull);
+        } else {
+            text = text.toLowerCase();
+            for (Room item : roomListFull) {
+                if (item.getName().toLowerCase().contains(text)) {
+                    roomList.add(item);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    // Cập nhật lại danh sách gốc khi có thay đổi (thêm/xóa/sửa)
+    public void updateFullList() {
+        this.roomListFull = new ArrayList<>(roomList);
     }
 
     public static class RoomViewHolder extends RecyclerView.ViewHolder {
