@@ -7,36 +7,52 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvRoomName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:text="Tên phòng" />
+            android:layout_toLeftOf="@+id/btnDelete"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvRoomPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Giá: 0 VNĐ" />
+            <TextView
+                android:id="@+id/tvRoomName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="Tên phòng" />
 
-        <TextView
-            android:id="@+id/tvRoomStatus"
+            <TextView
+                android:id="@+id/tvRoomPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Giá: 0 VNĐ" />
+
+            <TextView
+                android:id="@+id/tvRoomStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:text="Trạng thái"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
-            android:text="Trạng thái"
-            android:textColor="@android:color/white" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="Xóa phòng" />
 
-    </LinearLayout>
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

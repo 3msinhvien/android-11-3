@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,6 +72,13 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
             }
             return false;
         });
+
+        // Xử lý nút xóa
+        holder.btnDelete.setOnClickListener(v -> {
+            if (longClickListener != null) {
+                longClickListener.onItemLongClick(room, position);
+            }
+        });
     }
 
     @Override
@@ -80,11 +88,13 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
 
     public static class RoomViewHolder extends RecyclerView.ViewHolder {
         TextView tvRoomName, tvRoomPrice, tvRoomStatus;
+        ImageButton btnDelete;
         public RoomViewHolder(@NonNull View itemView) {
             super(itemView);
             tvRoomName = itemView.findViewById(R.id.tvRoomName);
             tvRoomPrice = itemView.findViewById(R.id.tvRoomPrice);
             tvRoomStatus = itemView.findViewById(R.id.tvRoomStatus);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 }
