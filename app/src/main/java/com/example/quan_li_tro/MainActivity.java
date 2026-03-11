@@ -14,7 +14,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements RoomAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements RoomAdapter.OnItemClickListener, RoomAdapter.OnItemLongClickListener {
     private List<Room> roomList = new ArrayList<>();
     private RoomAdapter adapter;
     private RecyclerView rvRooms;
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
 
         adapter = new RoomAdapter(this, roomList);
         adapter.setOnItemClickListener(this);
+        adapter.setOnItemLongClickListener(this);
         rvRooms.setLayoutManager(new LinearLayoutManager(this));
         rvRooms.setAdapter(adapter);
 
@@ -81,6 +82,25 @@ public class MainActivity extends AppCompatActivity implements RoomAdapter.OnIte
     @Override
     public void onItemClick(Room room, int position) {
         showUpdateRoomDialog(room, position);
+    }
+
+    @Override
+    public void onItemLongClick(Room room, int position) {
+        showDeleteConfirmDialog(room, position);
+    }
+
+    private void showDeleteConfirmDialog(Room room, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Xác nhận xóa");
+        builder.setMessage("Bạn có chắc chắn muốn xóa phòng này không?");
+        builder.setPositiveButton("Có", (dialog, which) -> {
+            roomList.remove(position);
+            adapter.notifyItemRemoved(position);
+            adapter.notifyItemRangeChanged(position, roomList.size());
+            Toast.makeText(this, "Đã xóa phòng", Toast.LENGTH_SHORT).show();
+        });
+        builder.setNegativeButton("Không", null);
+        builder.show();
     }
 
     private void showUpdateRoomDialog(Room room, int position) {

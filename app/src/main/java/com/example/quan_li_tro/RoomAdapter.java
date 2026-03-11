@@ -14,13 +14,22 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     private List<Room> roomList;
     private Context context;
     private OnItemClickListener listener;
+    private OnItemLongClickListener longClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(Room room, int position);
     }
 
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Room room, int position);
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener longClickListener) {
+        this.longClickListener = longClickListener;
     }
 
     public RoomAdapter(Context context, List<Room> roomList) {
@@ -53,6 +62,14 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
             if (listener != null) {
                 listener.onItemClick(room, position);
             }
+        });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) {
+                longClickListener.onItemLongClick(room, position);
+                return true;
+            }
+            return false;
         });
     }
 
