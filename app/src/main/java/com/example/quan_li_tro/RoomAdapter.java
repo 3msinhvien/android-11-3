@@ -13,6 +13,15 @@ import java.util.List;
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder> {
     private List<Room> roomList;
     private Context context;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Room room, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public RoomAdapter(Context context, List<Room> roomList) {
         this.context = context;
@@ -39,6 +48,12 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
             holder.tvRoomStatus.setText("Còn trống");
             holder.tvRoomStatus.setBackgroundColor(Color.GREEN);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(room, position);
+            }
+        });
     }
 
     @Override
